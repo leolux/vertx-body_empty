@@ -19,20 +19,20 @@ public class Server extends AbstractVerticle {
     HttpServer server = vertx.createHttpServer(options);
 
     Router router = Router.router(vertx);
-    router.route().handler(BodyHandler.create()).method(HttpMethod.POST).path("/some/resource")
-        .handler(routingContext -> {
-          try {
+    router.route().handler(BodyHandler.create());
+    router.route("/some/resource").method(HttpMethod.POST).handler(routingContext -> {
+      try {
 
-            JsonObject body = routingContext.getBodyAsJson();
-            if (body == null || body.isEmpty()) {
-              System.out.println("!!! Body is empty !!!");
-            } else {
-              System.out.println("BodyHandler works as expected");
-            }
-          } finally {
-            routingContext.response().end();
-          }
-        });
+        JsonObject body = routingContext.getBodyAsJson();
+        if (body == null || body.isEmpty()) {
+          System.out.println("!!! Body is empty !!!");
+        } else {
+          System.out.println("BodyHandler works as expected");
+        }
+      } finally {
+        routingContext.response().end();
+      }
+    });
     server.requestHandler(router::accept).listen();
   }
 }
